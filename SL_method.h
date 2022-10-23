@@ -19,17 +19,19 @@ private:
     double vel_y;
 //    std::vector<double> vel_u;
 //    std::vector<double> vel_v;
-    void find_trajectory(int n, double & x_d, double & y_d, double dt);
+//    void find_trajectory(int n, double & x_d, double & y_d, double dt);
 
 public:
     SL_method();
-    void set_grid(Grid2d & new_grid){sl_grid = new_grid;} // set grid
-    std::vector<double> get_sol(){ return sol; }        // access solution
+    SL_method(Grid2d grid, std::vector<double> ini_sol);
+    void set_grid(Grid2d & new_grid){sl_grid = new_grid;};// set grid
+    void set_init(std::vector<double> sol){ini_sol = sol;}; //set initial
     void set_velocity(double vel_u0, double vel_v0);
     //    void set_velocity(std::vector<double> & vel_u0, std::vector<double> & vel_v0);
+//    double check_boundary(double x, double min, double max);
     std::vector<double> trajectory_interpolation(std::vector<double> & func, int n, double dt);
-
-
+    void advection_solver(double dt);
+    std::vector<double> get_sol(){ return sol; }        // access solution
 };
 
 
