@@ -203,3 +203,51 @@ double sec_der_dy(Grid2d & grid, std::vector<double> &func, int n)
         return central_diff(func[n - N], func[n],func[n + N], dy);
     }
 }
+double bwd_dx(Grid2d & grid, std::vector<double> & func, int n){
+    if ( int(func.size()) != (grid.get_N()*grid.get_M()) )
+        throw std::invalid_argument("ERROR: Dimension doesn't match!");
+    else if ( grid.x_from_n(n) == grid.get_xmin() )
+        return 0.;
+
+    else
+        return (func[n] - func[n-1])/grid.get_dx();
+
+}
+double fwd_dx(Grid2d & grid, std::vector<double> & func, int n){
+    if ( int(func.size()) != (grid.get_N()*grid.get_M()) )
+        throw std::invalid_argument("ERROR: Dimension doesn't match!");
+    else if ( grid.x_from_n(n) == grid.get_xmax() )
+        return 0.;
+
+    else
+        return (func[n+1] - func[n])/grid.get_dx();
+
+}
+double bwd_dy(Grid2d & grid, std::vector<double> & func, int n){
+    if ( int(func.size()) != (grid.get_N()*grid.get_M()) )
+        throw std::invalid_argument("ERROR: Dimension doesn't match!");
+    else if ( grid.y_from_n(n) == grid.get_ymin() )
+        return 0.;
+
+    else
+        return (func[n] - func[n-grid.get_N()])/grid.get_dy();
+
+}
+double fwd_dy(Grid2d & grid, std::vector<double> & func, int n){
+    if ( int(func.size()) != (grid.get_N()*grid.get_M()) )
+        throw std::invalid_argument("ERROR: Dimension doesn't match!");
+    else if ( grid.y_from_n(n) == grid.get_ymax() )
+        return 0.;
+
+    else
+        return (func[n+grid.get_N()] - func[n])/grid.get_dy();
+}
+
+double signfunc(double x){
+    if (x>0.)
+        return 1.;
+    else if (x<0.)
+        return -1.;
+    else
+        return 0.;
+}

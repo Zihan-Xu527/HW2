@@ -32,7 +32,7 @@ int main() {
     std::vector<double> ini_sol;
     ini_sol.resize(N*N);
 
-//    initial solution:
+//    initial/exact solution:
     for (int i = 0; i < N*N; i++)
     {
         double x = newGrid.x_from_n(i);
@@ -45,19 +45,6 @@ int main() {
 
 
 
-// exact solution
-    std::vector<double> true_sol;
-    true_sol.resize(N*N);
-    for(int n=0 ; n < (N*N) ; n++) {
-        double x = newGrid.x_from_n(n);
-        double y = newGrid.y_from_n(n);
-        true_sol[n] = std::sqrt( pow((x * cos(tf) + y * sin(tf) - 0.25) , 2)
-                             +  pow ((y * cos(tf) - x * sin(tf)) ,2)) - 0.2;
-
-    }
-    newGrid.print_VTK_format(true_sol, "trueData", "../allVTK.vtk");
-//    newGrid.print_VTK_format("../trueVTK.vtk");
-//    newGrid.print_VTK_format(true_sol, "trueData", "../trueVTK.vtk");
 
 for (int i = 0; i < 4; i++) {
     std::cout << "dx/dt = " << ratios[i] << std::endl;
@@ -68,15 +55,15 @@ for (int i = 0; i < 4; i++) {
     double dt_mod = tf - num_iters*dt;
     std::cout << "number of iterations: " << num_iters << std::endl;
 
-    std::vector<double> numer_soln;
-    numer_soln.resize(N * N);
+    std::vector<double> numer_sol;
+    numer_sol.resize(N * N);
     for (int i = 0; i < num_iters; i++) {
         SL.set_init(SL.get_sol());
         SL.advection_solver(dt);
     }
     SL.set_init(SL.get_sol());
     SL.advection_solver(dt_mod);
-    numer_soln = SL.get_sol();
+    numer_sol = SL.get_sol();
 
     std::vector<double> err;
     err.resize(N * N);
@@ -84,7 +71,7 @@ for (int i = 0; i < 4; i++) {
     double sum2 = 0.;
 
     for (int i = 0; i < N * N; i++) {
-        err[i] = abs(numer_soln[i] - true_sol[i]);
+        err[i] = abs(numer_sol[i] - ini_sol[i]);
         sum += err[i];
         sum2 += err[i] * err[i];
     }
@@ -93,7 +80,7 @@ for (int i = 0; i < 4; i++) {
     std::cout << "L2 norm: " << std::sqrt(sum2) << std::endl;
     std::cout << "Max norm: " << max_err << std::endl;
 
-    newGrid.print_VTK_format(numer_soln, "numericalData", "../allVTK.vtk");
+    newGrid.print_VTK_format(numer_sol, "numericalData", "../allVTK.vtk");
     newGrid.print_VTK_format(err, "errorData", "../allVTK.vtk");
 //    newGrid.print_VTK_format("../numericalVTK.vtk");
 //    newGrid.print_VTK_format(numer_soln, "numericalData", "../numericalVTK.vtk");

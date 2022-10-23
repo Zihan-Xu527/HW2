@@ -15,4 +15,9 @@ double minmod(double a, double b);
 double central_diff(double lo, double mid, double hi, double dx);
 double sec_der_dx(Grid2d & grid, std::vector<double> & func, int n);
 double sec_der_dy(Grid2d & grid, std::vector<double> & func, int n);
+double bwd_dx(Grid2d & grid, std::vector<double> & func, int n);
+double fwd_dx(Grid2d & grid, std::vector<double> & func, int n);
+double bwd_dy(Grid2d & grid, std::vector<double> & func, int n);
+double fwd_dy(Grid2d & grid, std::vector<double> & func, int n);
+double signfunc(double x);
 #endif //HW2_MATH_TOOLS_H

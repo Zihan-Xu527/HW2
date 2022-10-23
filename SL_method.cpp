@@ -5,6 +5,7 @@
 #include "SL_method.h"
 #include <vector>
 #include "math_tools.h"
+#include <math.h>
 
 SL_method::SL_method()
 {
@@ -92,3 +93,35 @@ void SL_method::advection_solver(double dt)
     }
 
 }
+
+void SL_method::reinitialize(double dt){
+    std::vector<double> func = sol;
+    for (int n=0; n < (sl_grid.get_N()*sl_grid.get_M()) ; n++) {
+        double phi_x = 0.;
+        double phi_y = 0.;
+
+        if (signfunc(ini_sol[n])* bwd_dx(sl_grid, func, n) <= 0. && signfunc(ini_sol[n])* fwd_dx(sl_grid, func, n) <= 0.)
+            phi_x = fwd_dx(sl_grid, func, n);
+        else if (signfunc(ini_sol[n])* bwd_dx(sl_grid, func, n) >= 0. && signfunc(ini_sol[n])* fwd_dx(sl_grid, func, n) >= 0.)
+            phi_x = bwd_dx(sl_grid, func, n);
+        else if (signfunc(ini_sol[n])* bwd_dx(sl_grid, func, n) >= 0. && signfunc(ini_sol[n])* fwd_dx(sl_grid, func, n) <= 0.)
+            if ( abs(bwd_dx(sl_grid, func, n))>= abs(fwd_dx(sl_grid, func, n)))
+                phi_x = bwd_dx(sl_grid, func, n);
+            else
+                phi_x = fwd_dx(sl_grid, func, n);
+
+        if (signfunc(ini_sol[n])* bwd_dy(sl_grid, func, n) <= 0. && signfunc(ini_sol[n])* fwd_dy(sl_grid, func, n) <= 0.)
+            phi_y = fwd_dy(sl_grid, func, n);
+        else if (signfunc(ini_sol[n])* bwd_dy(sl_grid, func, n) >= 0. && signfunc(ini_sol[n])* fwd_dy(sl_grid, func, n) >= 0.)
+            phi_y = bwd_dy(sl_grid, func, n);
+        else if (signfunc(ini_sol[n])* bwd_dy(sl_grid, func, n) >= 0. && signfunc(ini_sol[n])* fwd_dy(sl_grid, func, n) <= 0.)
+            if ( abs(bwd_dy(sl_grid, func, n))>= abs(fwd_dy(sl_grid, func, n)))
+                phi_y = bwd_dy(sl_grid, func, n);
+            else
+                phi_y = fwd_dy(sl_grid, func, n);
+
+        sol[n] = func[n] - dt * signfunc(ini_sol[n]) * ( sqrt(pow(phi_x,2)+pow(phi_y,2)) - 1. );
+    }
+
+}
+
