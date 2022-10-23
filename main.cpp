@@ -33,7 +33,17 @@ int main() {
         double x = newGrid.x_from_n(i);
         double y = newGrid.y_from_n(i);
         ini_sol[i] = ini_cond(x,y);
+
     }
+
+    SL_method SL(newGrid, ini_sol);
+
+    for (int i; i < N*N; i++)
+    {
+
+
+    }
+
 
     ENO_interpolation(newGrid, ini_sol, -1., -1.);
 
