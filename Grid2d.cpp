@@ -3,7 +3,7 @@
 //
 
 #include "Grid2d.h"
-#include "math_tools.h"
+
 
 Grid2d::Grid2d() {
 
@@ -126,91 +126,3 @@ void Grid2d::print_VTK_format( std::vector<double> &F, std::string data_name,
     fclose (outFile);
 }
 
-//// Number 4
-//double Grid2d::fwd_dx(std::vector<double> &func, int n)
-//{
-//    if ( int(func.size()) != (N*M) )
-//        throw std::invalid_argument("ERROR: Dimension doesn't match!");
-//    else if ( x_from_n(n) == xmax )
-//        return 0.;
-//
-//    else
-//        return (func[n+1] - func[n])/dx;
-//
-//}
-//
-//double Grid2d::bwd_dx(std::vector<double> &func, int n)
-//{
-//
-//    if ( int(func.size()) != (N*M) )
-//        throw std::invalid_argument("ERROR: Dimension doesn't match!");
-//    else if ( x_from_n(n) == xmin )
-//        return 0.;
-//
-//    else
-//        return (func[n] - func[n-1])/dx;
-//}
-//
-//// Number 5
-//double Grid2d::fwd_dy(std::vector<double> &func, int n)
-//{
-//    if ( int(func.size()) != (N*M) )
-//        throw std::invalid_argument("ERROR: Dimension doesn't match!");
-//    else if ( y_from_n(n) == ymax )
-//        return 0.;
-//
-//    else
-//        return (func[n+N] - func[n])/dy;
-//}
-//
-//double Grid2d::bwd_dy(std::vector<double> &func, int n)
-//{
-//    if ( int(func.size()) != (N*M) )
-//        throw std::invalid_argument("ERROR: Dimension doesn't match!");
-//    else if ( y_from_n(n) == ymin )
-//        return 0.;
-//
-//    else
-//        return (func[n] - func[n-N])/dy;
-//}
-//
-//
-//// Number 6
-//double Grid2d::sec_der_dx(std::vector<double> &func, int n)
-//{
-//    if ( int(func.size()) != (N*M) )
-//        throw std::invalid_argument("ERROR: Dimension doesn't match!");
-//
-//    if ( x_from_n(n) == xmin )
-//    {
-//        return central_diff(func[n], func[n + 1],func[n + 2], dx);
-//    }
-//    else if ( x_from_n(n) == xmax )
-//    {
-//        return central_diff(func[n], func[n - 1],func[n - 2], dx);
-//
-//    }
-//    else
-//    {
-//        return central_diff(func[n - 1], func[n],func[n + 1], dx);
-//    }
-//}
-//
-//double Grid2d::sec_der_dy(std::vector<double> &func, int n) {
-//    if ( int(func.size()) != (N*M) )
-//        throw std::invalid_argument("ERROR: Dimension doesn't match!");
-//
-//    if ( y_from_n(n) == ymin )
-//    {
-//        return central_diff(func[n], func[n + N],func[n + 2 * N], dy);
-//    }
-//    else if ( y_from_n(n) == ymax )
-//    {
-//        return central_diff(func[n], func[n - N],func[n - 2 * N], dy);
-//
-//    }
-//    else
-//    {
-//        return central_diff(func[n - N], func[n],func[n + N], dy);
-//    }
-//}

@@ -51,14 +51,6 @@ public:
     void print_VTK_format(std::vector<double> &F, std::string data_name,
                           std::string file_name);
 
-//    double fwd_dx(std::vector<double> &func, int n);
-//    double bwd_dx(std::vector<double> &func, int n);
-//
-//    double fwd_dy(std::vector<double> &func, int n);
-//    double bwd_dy(std::vector<double> &func, int n);
-//
-//    double sec_der_dx(std::vector<double> &func, int n);
-//    double sec_der_dy(std::vector<double> &func, int n);
 };
 
 
