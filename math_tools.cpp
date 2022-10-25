@@ -9,7 +9,7 @@
 // find cell in which (x,y) belongs
 // find weighted avg of values (?)
 
-double bilinear_interpolation(Grid2d & grid, std::vector<double> & func, const double x, const double y){
+double bilinear_interpolation(Grid2d & grid, std::vector<double> & func, double x, double y){
 
     double phi;
     double dx = grid.get_dx();
@@ -28,14 +28,14 @@ double bilinear_interpolation(Grid2d & grid, std::vector<double> & func, const d
     // if (x,y) are outside domain, we need to find the nearest grid
 
     if (x >  xmax)
-        i = N;
+        i = N - 2;
     else if (x < xmin)
         i = 0;
     else
         i = floor((x - xmin)/dx);
 
     if (y > ymax)
-        j = M;
+        j = M - 2;
     else if (y < ymin)
         j = 0;
     else
@@ -59,8 +59,8 @@ double bilinear_interpolation(Grid2d & grid, std::vector<double> & func, const d
     return phi;
 }
 
-double ENO_interpolation(Grid2d & grid, std::vector<double> & func, const double x, const double y){
-    double phi;
+double ENO_interpolation(Grid2d & grid, std::vector<double> & func, double x, double y){
+    double phi= 0.;
     double dx = grid.get_dx();
     double dy = grid.get_dy();
     double xmin = grid.get_xmin();
@@ -75,20 +75,17 @@ double ENO_interpolation(Grid2d & grid, std::vector<double> & func, const double
         throw std::invalid_argument("ERROR: Dimension doesn't match!");
 
     // if (x,y) are outside domain, we need to find the nearest grid
-
-    if (x >  xmax)
-        i = N;
-    else if (x < xmin)
-        i = 0;
-    else
+    if (x >= xmin && x <= xmax)
         i = floor((x - xmin)/dx);
-
-    if (y > ymax)
-        j = M;
-    else if (y < ymin)
-        j = 0;
     else
+        i = x > xmax ? N - 2: 0;
+
+    if (y >= ymin && y <= ymax)
         j = floor((y - ymin)/dy);
+    else
+        j = y > ymax ? M - 2: 0;
+
+
 
 
 //    int n = grid.n_from_ij(i,j);
@@ -129,19 +126,19 @@ double ENO_interpolation(Grid2d & grid, std::vector<double> & func, const double
     return phi;
 
 }
-double MAX(double a, double b){
-    if (a > b)
-        return a;
-    else
-        return b;
-}
-
-int MAX(int a, int b){
-    if (a > b)
-        return a;
-    else
-        return b;
-}
+//double MAX(double a, double b){
+//    if (a > b)
+//        return a;
+//    else
+//        return b;
+//}
+//
+//int MAX(int a, int b){
+//    if (a > b)
+//        return a;
+//    else
+//        return b;
+//}
 
 double minmod(double a, double b){
     if ( a*b < 0.0 )
@@ -244,9 +241,9 @@ double fwd_dy(Grid2d & grid, std::vector<double> & func, int n){
 }
 
 double signfunc(double x){
-    if (x>0.)
+    if ( x > 0. )
         return 1.;
-    else if (x<0.)
+    else if ( x < 0. )
         return -1.;
     else
         return 0.;

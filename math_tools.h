@@ -7,10 +7,10 @@
 #include "Grid2d.h"
 #include <vector>
 
-double bilinear_interpolation(Grid2d & grid, std::vector<double> & func, const double x, const double y);
-double ENO_interpolation(Grid2d & grid, std::vector<double> & func, const double x, const double y);
-int MAX(int a, int b);
-double MAX(double a, double b);
+double bilinear_interpolation(Grid2d & grid, std::vector<double> & func, double x, double y);
+double ENO_interpolation(Grid2d & grid, std::vector<double> & func, double x, double y);
+//int MAX(int a, int b);
+//double MAX(double a, double b);
 double minmod(double a, double b);
 double central_diff(double lo, double mid, double hi, double dx);
 double sec_der_dx(Grid2d & grid, std::vector<double> & func, int n);

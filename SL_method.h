@@ -31,7 +31,7 @@ public:
     std::vector<double> trajectory_interpolation(std::vector<double> & func, int n, double dt);
     void advection_solver(double dt);
     std::vector<double> get_sol(){ return sol; };        // access solution
-    void reinitialize(double dt);
+    void godunov(double dt);
 };
 
 
