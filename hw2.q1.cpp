@@ -65,8 +65,8 @@ void HW2_1(double xmin, double xmax, double ymin, double ymax, double tf){
             std::cout << "dx/dt = " << ratio << ", ";
             double dt = dx/ratio;
             std::cout << "time step size : " << dt << std::endl;
-            int num_iters = tf/dt;
-            double dt_mod = tf - num_iters*dt;
+            int num_iters = floor(tf/dt);
+            double dt_mod = tf - num_iters * dt;
             std::cout << "number of iterations: " << num_iters + 1 << std::endl;
 
             SL_method SL(newGrid, ini_sol);
