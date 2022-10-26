@@ -10,6 +10,7 @@
 #include "math_tools.h"
 #include "SL_method.h"
 //#include "omp.h"
+#include <fstream>
 
 double ini_cond(double x, double y){
     return std::sqrt( pow((x-0.25), 2) + y*y ) - 0.2;
@@ -36,12 +37,35 @@ void HW2_1(double xmin, double xmax, double ymin, double ymax, double tf){
 
 
     int NN[4] = {9, 17, 33, 65};
+    double ratios[4] = {0.5, 1., 5., 10.};
+    //output
+    std::ofstream output1;
+    std::string fileName1 = "l1_errors.csv";
+    output1.open(fileName1);
+
+    std::ofstream output2;
+    std::string fileName2 = "l2_errors.csv";
+    output2.open(fileName2);
+
+    std::ofstream output3;
+    std::string fileName3 = "inf_errors.csv";
+    output3.open(fileName3);
+
+
+
+
+    output1<<" ,"<<ratios[0]<<","<<ratios[1]<<","<<ratios[2]<<","<<ratios[3]<<"\n";
+    output2<<" ,"<<ratios[0]<<","<<ratios[1]<<","<<ratios[2]<<","<<ratios[3]<<"\n";
+    output3<<" ,"<<ratios[0]<<","<<ratios[1]<<","<<ratios[2]<<","<<ratios[3]<<"\n";
     for (int i = 0; i < 4; i++){
         int N = NN[i];
         std::cout << "N = " << N <<" , ";
         Grid2d newGrid(N, N, xmin, xmax, ymin, ymax);
         double dx = newGrid.get_dx();
         std::cout << "space step size : " << dx << std::endl;
+        output1<< dx <<",";
+        output2<< dx <<",";
+        output3<< dx <<",";
 
         //    initial/exact solution:
         std::vector<double> ini_sol;
@@ -59,7 +83,6 @@ void HW2_1(double xmin, double xmax, double ymin, double ymax, double tf){
         newGrid.print_VTK_format(ini_sol, "iniData", file_name);
 
 
-        double ratios[4] = {0.5, 1., 5., 10.};
         for (int j = 0; j < 4; j++) {
             double ratio = ratios[j];
             std::cout << "dx/dt = " << ratio << ", ";
@@ -89,6 +112,10 @@ void HW2_1(double xmin, double xmax, double ymin, double ymax, double tf){
             std::cout << "L2 norm: " << err[1] << std::endl;
             std::cout << "Max norm: " << err[2] << std::endl;
 
+            output1<< err[0] <<",";
+            output2<< err[1] <<",";
+            output3<< err[2] <<",";
+
 
 
 
@@ -100,8 +127,14 @@ void HW2_1(double xmin, double xmax, double ymin, double ymax, double tf){
             newGrid.print_VTK_format(diff, err_name, file_name);
 
         }
+        output1 << "\n";
+        output2 << "\n";
+        output3 << "\n";
 
     }
+    output1.close();
+    output2.close();
+    output3.close();
 
 
 }
