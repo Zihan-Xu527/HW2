@@ -26,7 +26,6 @@ double bilinear_interpolation(Grid2d & grid, std::vector<double> & func, double 
         throw std::invalid_argument("ERROR: Dimension doesn't match!");
 
     // if (x,y) are outside domain, we need to find the nearest grid
-
     if (x >  xmax)
         i = N - 2;
     else if (x < xmin)
@@ -41,7 +40,6 @@ double bilinear_interpolation(Grid2d & grid, std::vector<double> & func, double 
     else
         j = floor((y - ymin)/dy);
 
-
     double x_i = xmin + i * dx;
     double y_j = ymin + j * dy;
     double x_ip1 = x_i + dx;
@@ -55,90 +53,8 @@ double bilinear_interpolation(Grid2d & grid, std::vector<double> & func, double 
     phi += func[grid.n_from_ij(i    , j+1)]  * ( x_ip1 - x   ) * ( y     - y_j ) / (dx*dy) ;
     phi += func[grid.n_from_ij(i+1, j+1)]  * ( x     - x_i ) * ( y     - y_j ) / (dx*dy) ;
 
-
     return phi;
 }
-
-double ENO_interpolation(Grid2d & grid, std::vector<double> & func, double x, double y){
-    double phi= 0.;
-    double dx = grid.get_dx();
-    double dy = grid.get_dy();
-    double xmin = grid.get_xmin();
-    double xmax = grid.get_xmax();
-    double ymin = grid.get_ymin();
-    double ymax = grid.get_ymax();
-    int N = grid.get_N();
-    int M = grid.get_M();
-    int i,j;
-
-    if ( int(func.size()) != (N*M) )
-        throw std::invalid_argument("ERROR: Dimension doesn't match!");
-
-    // if (x,y) are outside domain, we need to find the nearest grid
-    if (x >= xmin && x <= xmax)
-        i = floor((x - xmin)/dx);
-    else
-        i = x > xmax ? N - 2: 0;
-
-    if (y >= ymin && y <= ymax)
-        j = floor((y - ymin)/dy);
-    else
-        j = y > ymax ? M - 2: 0;
-
-
-
-
-//    int n = grid.n_from_ij(i,j);
-//
-//
-//    std::cout << "i: " << i << " j: " << j << std::endl;
-//    std::cout << "n: " << n << std::endl;
-
-    double x_i = xmin + i * dx;
-    double y_j = ymin + j * dy;
-    double x_ip1 = x_i + dx;
-    double y_jp1 = y_j + dy;
-
-    // Use quadratic interpolation (formula in Lab 3) to get value at x
-    // (i.e. think weighted avg)
-    // (i, j), (i + 1, j), (i, j + 1), (i + 1, j + 1) are the corners of the cell C
-    phi  = func[grid.n_from_ij(i    ,   j  )]  * ( x_ip1 - x   ) * ( y_jp1 - y   ) / (dx*dy) ;
-    phi += func[grid.n_from_ij(i+1,   j  )]  * ( x     - x_i ) * ( y_jp1 - y   ) / (dx*dy) ;
-    phi += func[grid.n_from_ij(i    , j+1)]  * ( x_ip1 - x   ) * ( y     - y_j ) / (dx*dy) ;
-    phi += func[grid.n_from_ij(i+1, j+1)]  * ( x     - x_i ) * ( y     - y_j ) / (dx*dy) ;
-
-    double phi_xx_00 = sec_der_dx(grid, func, grid.n_from_ij(i    ,   j  ));
-    double phi_xx_10 = sec_der_dx(grid, func, grid.n_from_ij(i+1,   j  ));
-    double phi_xx_01 = sec_der_dx(grid, func, grid.n_from_ij(i    , j+1));
-    double phi_xx_11 = sec_der_dx(grid, func, grid.n_from_ij(i+1, j+1));
-
-    double phi_xx_minmod = minmod(minmod(phi_xx_00, phi_xx_01),minmod(phi_xx_10, phi_xx_11));
-    phi -= .5 * (x - x_i) * (x_ip1 - x) * phi_xx_minmod;
-
-    double phi_yy_00 = sec_der_dy(grid, func, grid.n_from_ij(i    ,   j  ));
-    double phi_yy_10 = sec_der_dy(grid, func, grid.n_from_ij(i+1,   j  ));
-    double phi_yy_01 = sec_der_dy(grid, func, grid.n_from_ij(i    , j+1));
-    double phi_yy_11 = sec_der_dy(grid, func, grid.n_from_ij(i+1, j+1));
-
-    double phi_yy_minmod = minmod(minmod(phi_yy_00, phi_yy_01),minmod(phi_yy_10, phi_yy_11));
-    phi -= .5 * (y - y_j) * (y_jp1 - y) * phi_yy_minmod;
-
-    return phi;
-
-}
-//double MAX(double a, double b){
-//    if (a > b)
-//        return a;
-//    else
-//        return b;
-//}
-//
-//int MAX(int a, int b){
-//    if (a > b)
-//        return a;
-//    else
-//        return b;
-//}
 
 double minmod(double a, double b){
     if ( a*b < 0.0 )
@@ -149,18 +65,14 @@ double minmod(double a, double b){
         return b;
 }
 
-double central_diff(double lo, double mid, double hi, double dx){
-    return (lo - 2. * mid + hi) / (dx * dx);
+double central_diff(double lo, double mid, double hi, double h){
+    return (lo - 2. * mid + hi) / (h * h);
 }
 
-double sec_der_dx(Grid2d & grid, std::vector<double> &func, int n)
+double sec_der_dx(Grid2d & grid, std::vector<double> & func, int n)
 {
-    int N = grid.get_N();
-    int M = grid.get_M();
-    double dx = grid.get_dx();
 
-    if ( int(func.size()) != (N*M) )
-        throw std::invalid_argument("ERROR: Dimension doesn't match!");
+    double dx = grid.get_dx();
 
     if ( grid.x_from_n(n) == grid.get_xmin() )
     {
@@ -177,14 +89,10 @@ double sec_der_dx(Grid2d & grid, std::vector<double> &func, int n)
     }
 }
 
-double sec_der_dy(Grid2d & grid, std::vector<double> &func, int n)
+double sec_der_dy(Grid2d & grid, std::vector<double> & func, int n)
 {
     int N = grid.get_N();
-    int M = grid.get_M();
     double dy = grid.get_dy();
-
-    if ( int(func.size()) != (N*M) )
-        throw std::invalid_argument("ERROR: Dimension doesn't match!");
 
     if ( grid.y_from_n(n) == grid.get_ymin() )
     {
@@ -200,6 +108,64 @@ double sec_der_dy(Grid2d & grid, std::vector<double> &func, int n)
         return central_diff(func[n - N], func[n],func[n + N], dy);
     }
 }
+
+double ENO_interpolation(Grid2d & grid, std::vector<double> & func, double x, double y){
+    double phi;
+    double dx = grid.get_dx();
+    double dy = grid.get_dy();
+    double xmin = grid.get_xmin();
+    double xmax = grid.get_xmax();
+    double ymin = grid.get_ymin();
+    double ymax = grid.get_ymax();
+    int N = grid.get_N();
+    int M = grid.get_M();
+    int i,j;
+
+    if ( int(func.size()) != (N*M) )
+        throw std::invalid_argument("ERROR: Dimension doesn't match!");
+
+    // if (x, y) is inside the domain, we take the floor of (x - xmin)/dx and (y - ymin)/dy
+    // else if (x,y) is outside domain, we need to find the nearest grid
+    if (x >= xmin && x <= xmax)
+        i = floor((x - xmin)/dx);
+    else
+        i = x > xmax ? N - 2: 0;
+
+    if (y >= ymin && y <= ymax)
+        j = floor((y - ymin)/dy);
+    else
+        j = y > ymax ? M - 2: 0;
+
+    double x_i = xmin + i * dx;
+    double y_j = ymin + j * dy;
+    double x_ip1 = x_i + dx;
+    double y_jp1 = y_j + dy;
+
+    // Use quadratic interpolation (formula in Lab 3) to get value at x
+    // (i, j), (i + 1, j), (i, j + 1), (i + 1, j + 1) are the corners of the cell C
+    phi  = func[grid.n_from_ij(i    ,   j  )]  * ( x_ip1 - x   ) * ( y_jp1 - y   ) / (dx*dy) ;
+    phi += func[grid.n_from_ij(i+1,   j  )]  * ( x     - x_i ) * ( y_jp1 - y   ) / (dx*dy) ;
+    phi += func[grid.n_from_ij(i    , j+1)]  * ( x_ip1 - x   ) * ( y     - y_j ) / (dx*dy) ;
+    phi += func[grid.n_from_ij(i+1, j+1)]  * ( x     - x_i ) * ( y     - y_j ) / (dx*dy) ;
+
+    double phi_xx_00 = sec_der_dx(grid, func, grid.n_from_ij(i    ,   j  ));
+    double phi_xx_10 = sec_der_dx(grid, func, grid.n_from_ij(i+1,   j  ));
+    double phi_xx_01 = sec_der_dx(grid, func, grid.n_from_ij(i    , j+1));
+    double phi_xx_11 = sec_der_dx(grid, func, grid.n_from_ij(i+1, j+1));
+    double phi_xx = minmod(minmod(phi_xx_00, phi_xx_01),minmod(phi_xx_10, phi_xx_11));
+    phi -= .5 * (x - x_i) * (x_ip1 - x) * phi_xx;
+
+    double phi_yy_00 = sec_der_dy(grid, func, grid.n_from_ij(i    ,   j  ));
+    double phi_yy_10 = sec_der_dy(grid, func, grid.n_from_ij(i+1,   j  ));
+    double phi_yy_01 = sec_der_dy(grid, func, grid.n_from_ij(i    , j+1));
+    double phi_yy_11 = sec_der_dy(grid, func, grid.n_from_ij(i+1, j+1));
+    double phi_yy = minmod(minmod(phi_yy_00, phi_yy_01),minmod(phi_yy_10, phi_yy_11));
+    phi -= .5 * (y - y_j) * (y_jp1 - y) * phi_yy;
+
+    return phi;
+}
+
+
 double bwd_dx(Grid2d & grid, std::vector<double> & func, int n){
     if ( int(func.size()) != (grid.get_N()*grid.get_M()) )
         throw std::invalid_argument("ERROR: Dimension doesn't match!");
@@ -240,11 +206,15 @@ double fwd_dy(Grid2d & grid, std::vector<double> & func, int n){
         return (func[n+grid.get_N()] - func[n])/grid.get_dy();
 }
 
-double signfunc(double x){
+double signum(double x){
     if ( x > 0. )
         return 1.;
     else if ( x < 0. )
         return -1.;
     else
         return 0.;
+}
+
+double ini_cond(double x, double y){
+    return std::sqrt( pow((x-0.25), 2) + y*y ) - 0.2;
 }

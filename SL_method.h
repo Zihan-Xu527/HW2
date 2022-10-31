@@ -9,6 +9,7 @@
 #include <vector>
 #include "math_tools.h"
 #include <math.h>
+#include <cmath>
 
 // Semi-Langrangian Method
 class SL_method {
@@ -18,6 +19,7 @@ private:
     std::vector<double> sol;
     double vel_x;
     double vel_y;
+
 //    std::vector<double> vel_u;
 //    std::vector<double> vel_v;
 //    void find_trajectory(int n, double & x_d, double & y_d, double dt);
@@ -25,9 +27,9 @@ private:
 public:
     SL_method();
     SL_method(Grid2d grid, std::vector<double> ini_sol);
-    void set_grid(Grid2d & new_grid){sl_grid = new_grid;};// set grid
-    void set_init(std::vector<double> sol){ini_sol = sol;}; //set initial
-    void set_velocity(double x, double y);
+
+    void set_velocity(const double x, const double y);
+
     std::vector<double> trajectory_interpolation(std::vector<double> & func, int n, double dt);
     void advection_solver(double dt);
     std::vector<double> get_sol(){ return sol; };        // access solution
