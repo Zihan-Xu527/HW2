@@ -29,6 +29,7 @@ public:
     SL_method(Grid2d grid, std::vector<double> ini_sol);
 
     void set_velocity(const double x, const double y);
+    void set_initial(std::vector<double> soln){ini_sol = soln;};
 
     std::vector<double> trajectory_interpolation(std::vector<double> & func, int n, double dt);
     void advection_solver(double dt);

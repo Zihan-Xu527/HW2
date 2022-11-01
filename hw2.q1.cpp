@@ -94,9 +94,9 @@ void HW2_1(double xmin, double xmax, double ymin, double ymax, double tf){
             std::vector<double> numer_soln;
             numer_soln.assign(ini_soln.size(), 0.);
             while(t < tf){
-//                SL.set_init(SL.get_sol());
                 dt = std::min(dt, tf-t);
                 SL.advection_solver(dt);
+                SL.set_initial(SL.get_sol());
                 t += dt;
             }
             numer_soln = SL.get_sol();

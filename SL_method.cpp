@@ -52,7 +52,6 @@ std::vector<double> SL_method::trajectory_interpolation(std::vector<double> &fun
 
 void SL_method::advection_solver(double dt)
 {
-    ini_sol = sol;
     for (int n = 0 ; n < ( sl_grid.get_N() * sl_grid.get_M() ) ; n++) {
         std::vector<double> depart_coord = trajectory_interpolation( ini_sol, n, dt );
         sol[n] = ENO_interpolation(sl_grid, ini_sol, depart_coord[0], depart_coord[1]);
