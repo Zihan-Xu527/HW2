@@ -42,7 +42,7 @@ void HW2_2(double xmin, double xmax, double ymin, double ymax, double tf){
     //  REINITIALIZATION
     SL_method SL(newGrid, ini_soln);
     std::vector<double> sol= ini_soln;
-    double d_tau = .2 * dx;
+    double d_tau = .5 * dx;
     double t = 0.;
 //    int max_iter = 1000;
     int num_iter = 0;

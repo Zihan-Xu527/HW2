@@ -108,7 +108,10 @@ double sec_der_dy(Grid2d & grid, std::vector<double> & func, int n)
         return central_diff(func[n - N], func[n],func[n + N], dy);
     }
 }
-
+// 01 --- 11
+// |       |
+// |       |
+// 00 --- 10
 double ENO_interpolation(Grid2d & grid, std::vector<double> & func, double x, double y){
     double phi;
     double dx = grid.get_dx();
