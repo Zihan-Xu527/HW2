@@ -126,6 +126,7 @@ double ENO_interpolation(Grid2d & grid, std::vector<double> & func, double x, do
 
     // if (x, y) is inside the domain, we take the floor of (x - xmin)/dx and (y - ymin)/dy
     // else if (x,y) is outside domain, we need to find the nearest grid
+
     if (x >= xmin && x <= xmax)
         i = floor((x - xmin)/dx);
     else
@@ -217,4 +218,26 @@ double signum(double x){
 
 double ini_cond(double x, double y){
     return std::sqrt( pow((x-0.25), 2) + y*y ) - 0.2;
+}
+
+std::vector<double> err_norm(std::vector<double> x, std::vector<double> y, double eps, std::vector<double> & diff){
+    std::vector<double> err;
+    err.resize(3); // reserve l1, l2, and max norm respectively
+    double max = 0.;
+//#pragma omp parallel for
+    for (int i = 0; i < x.size(); i++){
+        diff[i] = std::abs(x[i] - y[i]);
+        err[0] += diff[i]; //l1 norm
+        err[1] += pow(diff[i], 2);
+        max = diff[i] > max ? diff[i] : max; //max norm
+//        if (std::abs(x[i]) < eps){
+//            err[0] += diff[i]; //l1 norm
+//            err[1] += pow(diff[i], 2);
+//            max = diff[i] > max ? diff[i] : max; //max norm
+//        }
+
+    }
+    err[1] = std::sqrt(err[1]); //l2 norm
+    err[2] = max;
+    return err;
 }

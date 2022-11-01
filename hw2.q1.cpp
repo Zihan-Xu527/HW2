@@ -13,27 +13,7 @@
 #include <fstream>
 
 
-std::vector<double> err_norm(std::vector<double> x, std::vector<double> y, double eps, std::vector<double> & diff){
-    std::vector<double> err;
-    err.resize(3); // reserve l1, l2, and max norm respectively
-    double max = 0.;
-//#pragma omp parallel for
-    for (int i = 0; i < x.size(); i++){
-        diff[i] = std::abs(x[i] - y[i]);
-        err[0] += diff[i]; //l1 norm
-        err[1] += pow(diff[i], 2);
-        max = diff[i] > max ? diff[i] : max; //max norm
-//        if (std::abs(x[i]) < eps){
-//            err[0] += diff[i]; //l1 norm
-//            err[1] += pow(diff[i], 2);
-//            max = diff[i] > max ? diff[i] : max; //max norm
-//        }
 
-    }
-    err[1] = std::sqrt(err[1]); //l2 norm
-    err[2] = max;
-    return err;
-}
 
 void HW2_1(double xmin, double xmax, double ymin, double ymax, double tf){
 
