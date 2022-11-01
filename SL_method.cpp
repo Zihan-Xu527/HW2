@@ -65,35 +65,39 @@ void SL_method::godunov(double dt){
         double phi_x = 0.; // default condition c
         // condition a:
         if ( signum(ini_sol[n])* bwd_dx(sl_grid, func, n) <= 0. && signum(ini_sol[n])* fwd_dx(sl_grid, func, n) <= 0. )
+        {
             phi_x = fwd_dx(sl_grid, func, n);
+        }
         // condition b:
         else if ( signum(ini_sol[n])* bwd_dx(sl_grid, func, n) >= 0. && signum(ini_sol[n])* fwd_dx(sl_grid, func, n) >= 0. )
+        {
             phi_x = bwd_dx(sl_grid, func, n);
+        }
         // condition d
-        else if ( signum(ini_sol[n])* bwd_dx(sl_grid, func, n) >= 0. && signum(ini_sol[n])* fwd_dx(sl_grid, func, n) <= 0. )
-            // d. i.
-            if ( std::abs(bwd_dx(sl_grid, func, n))>= std::abs(fwd_dx(sl_grid, func, n)))
-                phi_x = bwd_dx(sl_grid, func, n);
-            // d. ii.
-            else
-                phi_x = fwd_dx(sl_grid, func, n);
+        else if ( signum(ini_sol[n])* bwd_dx(sl_grid, func, n) >= 0. && signum(ini_sol[n])* fwd_dx(sl_grid, func, n) <= 0. ){
+            // d. i. or ii.
+            phi_x = ( std::abs(bwd_dx(sl_grid, func, n))>= std::abs(fwd_dx(sl_grid, func, n)) ) ? bwd_dx(sl_grid, func, n) : fwd_dx(sl_grid, func, n);
+
+        }
+
 
 
         double phi_y = 0.; // default condition c
         // condition a:
         if ( signum(ini_sol[n])* bwd_dy(sl_grid, func, n) <= 0. && signum(ini_sol[n])* fwd_dy(sl_grid, func, n) <= 0. )
+        {
             phi_y = fwd_dy(sl_grid, func, n);
+        }
         // condition b:
         else if (signum(ini_sol[n])* bwd_dy(sl_grid, func, n) >= 0. && signum(ini_sol[n])* fwd_dy(sl_grid, func, n) >= 0.)
+        {
             phi_y = bwd_dy(sl_grid, func, n);
+        }
         // condition d
         else if (signum(ini_sol[n])* bwd_dy(sl_grid, func, n) >= 0. && signum(ini_sol[n])* fwd_dy(sl_grid, func, n) <= 0.)
-            // d. i.
-            if ( std::abs(bwd_dy(sl_grid, func, n))>= std::abs(fwd_dy(sl_grid, func, n)))
-                phi_y = bwd_dy(sl_grid, func, n);
-            // d. ii.
-            else
-                phi_y = fwd_dy(sl_grid, func, n);
+        {   // d. i. or ii.
+            phi_y = ( std::abs(bwd_dy(sl_grid, func, n))>= std::abs(fwd_dy(sl_grid, func, n)) ) ? bwd_dy(sl_grid, func, n) : fwd_dy(sl_grid, func, n);
+        }
 
         sol[n] = func[n] - dt * signum(ini_sol[n]) * ( std::sqrt( pow(phi_x,2) + pow(phi_y,2) ) - 1. );
     }
