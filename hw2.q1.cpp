@@ -21,15 +21,15 @@ void HW2_1(double xmin, double xmax, double ymin, double ymax, double tf){
     double ratios[4] = {0.5, 1., 5., 10.}; // dx/dt ratios: 0.5, 1, 5, 10
     //output
     std::ofstream output1;
-    std::string fileName1 = "l1_errors.csv";
+    std::string fileName1 = "../l1_errors.csv";
     output1.open(fileName1);
 
     std::ofstream output2;
-    std::string fileName2 = "l2_errors.csv";
+    std::string fileName2 = "../l2_errors.csv";
     output2.open(fileName2);
 
     std::ofstream output3;
-    std::string fileName3 = "inf_errors.csv";
+    std::string fileName3 = "../inf_errors.csv";
     output3.open(fileName3);
 
     output1<<" ,"<<ratios[0]<<","<<ratios[1]<<","<<ratios[2]<<","<<ratios[3]<<"\n";

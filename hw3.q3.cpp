@@ -13,7 +13,7 @@
 
 void HW2_3(double xmin, double xmax, double ymin, double ymax, double tf){
 
-    int N = 65;
+    int N = 129;
     Grid2d newGrid(N, N, xmin, xmax, ymin, ymax);
     double dx = newGrid.get_dx();
     std::cout << "space step size : " << dx << std::endl;
@@ -32,6 +32,7 @@ void HW2_3(double xmin, double xmax, double ymin, double ymax, double tf){
     char file_name[250];
     sprintf(file_name,"../q3VTK.vtk");
     newGrid.print_VTK_format(file_name);
+    newGrid.print_VTK_format(ini_soln, "ini_soln", file_name);
     newGrid.print_VTK_format(level_set, "level_set_ini", file_name);
 
     SL_method SL(newGrid, ini_soln);
@@ -57,32 +58,16 @@ void HW2_3(double xmin, double xmax, double ymin, double ymax, double tf){
         t += dt;
     }
     char data_name[250];
-    sprintf(data_name,"num_iter=%d", num_iter);
+    sprintf(data_name,"final_soln");
     newGrid.print_VTK_format(sol, data_name,file_name);
     for (int n = 0; n < N * N; n++)
     {
         level_set[n] = signum(sol[n]);
+
     }
 
     newGrid.print_VTK_format(level_set, "final_level_set",file_name);
 
 
-
-//    for (int n=0; n < (num_iters+1) ; ++n)
-//    {
-//        sol = SL.get_sol();
-//        SL.set_init(sol);
-//        SL.one_step(deltat);
-//        for (int n=0; n < (10) ; ++n ) {
-//            SL.reinit(deltat/50.);
-//            //std::vector<double> sol = SL.get_sol();
-//        }
-//        sol = SL.get_sol();
-//        if (n  % countmod == 0 ) {
-//            //char name[250];
-//            sprintf(name,"/Users/mpowell2/Documents/FIN/finalthree2=%d.vtk",n);
-//            gridf.initialize_VTK_file(name);
-//            gridf.print_VTK_Format(sol, "value_at_nodes",name);
-//        }
 
 }
