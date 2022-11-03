@@ -20,20 +20,19 @@ void HW2_3(double xmin, double xmax, double ymin, double ymax, double tf){
     //    initial/exact solution:
     std::vector<double> ini_soln;
     ini_soln.assign(N*N, 0.);
-    std::vector<double> level_set;
-    level_set.assign(N*N, 0.);
+
     for (int n = 0; n < N * N; n++)
     {
         double x = newGrid.x_from_n(n);
         double y = newGrid.y_from_n(n);
         ini_soln[n] = ini_cond(x,y);
-        level_set[n] = signum(ini_soln[n]);
+
     }
     char file_name[250];
     sprintf(file_name,"../q3VTK.vtk");
     newGrid.print_VTK_format(file_name);
     newGrid.print_VTK_format(ini_soln, "ini_soln", file_name);
-    newGrid.print_VTK_format(level_set, "level_set_ini", file_name);
+
 
     SL_method SL(newGrid, ini_soln);
     std::vector<double> sol= ini_soln;
@@ -64,14 +63,6 @@ void HW2_3(double xmin, double xmax, double ymin, double ymax, double tf){
     diff.resize(sol.size());
     std::vector<double> err = err_norm(ini_soln, sol,diff);
     newGrid.print_VTK_format(diff, "final_err", file_name);
-//    for (int n = 0; n < N * N; n++)
-//    {
-//        level_set[n] = signum(sol[n]);
-//
-//    }
-
-//    newGrid.print_VTK_format(level_set, "final_level_set",file_name);
-
 
 
 }

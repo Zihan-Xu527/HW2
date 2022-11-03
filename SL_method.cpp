@@ -68,12 +68,12 @@ void SL_method::godunov(double dt){
             phi_x = fwd_dx(sl_grid, func, n);
         }
         // condition b:
-        else if ( signum(ini_sol[n])* bwd_dx(sl_grid, func, n) >= 0. && signum(ini_sol[n])* fwd_dx(sl_grid, func, n) >= 0. )
+        if ( signum(ini_sol[n])* bwd_dx(sl_grid, func, n) >= 0. && signum(ini_sol[n])* fwd_dx(sl_grid, func, n) >= 0. )
         {
             phi_x = bwd_dx(sl_grid, func, n);
         }
         // condition d
-        else if ( signum(ini_sol[n])* bwd_dx(sl_grid, func, n) >= 0. && signum(ini_sol[n])* fwd_dx(sl_grid, func, n) <= 0. ){
+        if ( signum(ini_sol[n])* bwd_dx(sl_grid, func, n) >= 0. && signum(ini_sol[n])* fwd_dx(sl_grid, func, n) <= 0. ){
             // d. i. or ii.
             phi_x = ( std::abs(bwd_dx(sl_grid, func, n))>= std::abs(fwd_dx(sl_grid, func, n)) ) ? bwd_dx(sl_grid, func, n) : fwd_dx(sl_grid, func, n);
 
@@ -88,12 +88,12 @@ void SL_method::godunov(double dt){
             phi_y = fwd_dy(sl_grid, func, n);
         }
         // condition b:
-        else if (signum(ini_sol[n])* bwd_dy(sl_grid, func, n) >= 0. && signum(ini_sol[n])* fwd_dy(sl_grid, func, n) >= 0.)
+        if (signum(ini_sol[n])* bwd_dy(sl_grid, func, n) >= 0. && signum(ini_sol[n])* fwd_dy(sl_grid, func, n) >= 0.)
         {
             phi_y = bwd_dy(sl_grid, func, n);
         }
         // condition d
-        else if (signum(ini_sol[n])* bwd_dy(sl_grid, func, n) >= 0. && signum(ini_sol[n])* fwd_dy(sl_grid, func, n) <= 0.)
+        if (signum(ini_sol[n])* bwd_dy(sl_grid, func, n) >= 0. && signum(ini_sol[n])* fwd_dy(sl_grid, func, n) <= 0.)
         {   // d. i. or ii.
             phi_y = ( std::abs(bwd_dy(sl_grid, func, n))>= std::abs(fwd_dy(sl_grid, func, n)) ) ? bwd_dy(sl_grid, func, n) : fwd_dy(sl_grid, func, n);
         }

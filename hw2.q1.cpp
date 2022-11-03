@@ -14,6 +14,52 @@
 
 
 
+void check_dx(){
+    double dt = 1./32.; //fix time step size dt
+    double tf = 2 * M_PI;
+    std::ofstream output4;
+    std::string fileName4 = "../check_dx.csv";
+    output4.open(fileName4);
+    // dx/dt ratios: 0.5, 1, 2, 4
+    // dx : 1/64, 1/32, 1/16, 1/8
+    // N : 129, 65, 33, 17
+    int NN[4] = {17, 33, 65, 129};
+    for (int i = 0; i < 4; i++){
+        dt = 1./32.;
+        int N = NN[i] ;
+        Grid2d newGrid(N, N, -1., 1., -1., 1.);
+        double dx = newGrid.get_dx();
+        output4 << dx << ",";
+        std::vector<double> ini_soln;
+        ini_soln.assign(N*N, 0.);
+        for (int n = 0; n < (newGrid.get_N() * newGrid.get_M()) ; n++)
+        {
+            double x = newGrid.x_from_n(n);
+            double y = newGrid.y_from_n(n);
+            ini_soln[n] = ini_cond(x,y);
+        }
+        SL_method SL(newGrid, ini_soln);
+        double t = 0.;
+        std::vector<double> numer_soln;
+        numer_soln.assign(ini_soln.size(), 0.);
+        while(t < tf){
+            dt = std::min(dt, tf-t);
+            SL.advection_solver(dt);
+            SL.set_initial(SL.get_sol());
+            t += dt;
+        }
+        numer_soln = SL.get_sol();
+        std::vector<double> diff;
+        diff.assign(ini_soln.size(), 0.);
+        std::vector<double> err = err_norm(ini_soln, numer_soln, diff);
+        output4 << err[0] << "," << err[1] << "," << err[2]<<"\n";
+        std::cout<<"errors for dx="<<dx<<": "<<err[2]<<std::endl;
+    }
+    output4.close();
+
+}
+
+
 
 void HW2_1(double xmin, double xmax, double ymin, double ymax, double tf){
 
@@ -32,9 +78,9 @@ void HW2_1(double xmin, double xmax, double ymin, double ymax, double tf){
     std::string fileName3 = "../inf_errors.csv";
     output3.open(fileName3);
 
-    output1<<" ,"<<ratios[0]<<","<<ratios[1]<<","<<ratios[2]<<","<<ratios[3]<<"\n";
-    output2<<" ,"<<ratios[0]<<","<<ratios[1]<<","<<ratios[2]<<","<<ratios[3]<<"\n";
-    output3<<" ,"<<ratios[0]<<","<<ratios[1]<<","<<ratios[2]<<","<<ratios[3]<<"\n";
+    output1<<" ,"<<ratios[0]<<","<<ratios[1]<<","<<ratios[2]<<","<<ratios[3]<<", "<<"\n";
+    output2<<" ,"<<ratios[0]<<","<<ratios[1]<<","<<ratios[2]<<","<<ratios[3]<<", "<<"\n";
+    output3<<" ,"<<ratios[0]<<","<<ratios[1]<<","<<ratios[2]<<","<<ratios[3]<<", "<<"\n";
 
     for (int i = 0; i < 4 ; i++){
 
@@ -102,6 +148,31 @@ void HW2_1(double xmin, double xmax, double ymin, double ymax, double tf){
             newGrid.print_VTK_format(diff, err_name, file_name);
 
         }
+        // check convergence behavior for dt
+//        double dt = dx * dx;
+//        std::cout << "time step size dt = dx^2: " << dt << std::endl;
+//
+//        SL_method SL(newGrid, ini_soln);
+//        double t = 0.;
+//        std::vector<double> numer_soln;
+//        numer_soln.assign(ini_soln.size(), 0.);
+//        while(t < tf){
+//            dt = std::min(dt, tf-t);
+//            SL.advection_solver(dt);
+//            SL.set_initial(SL.get_sol());
+//            t += dt;
+//        }
+//        numer_soln = SL.get_sol();
+//        std::vector<double> diff;
+//        diff.assign(ini_soln.size(), 0.);
+//        std::vector<double> err = err_norm(ini_soln, numer_soln, diff);
+//        std::cout << "L1 norm: " << err[0] << std::endl;
+//        std::cout << "L2 norm: " << err[1] << std::endl;
+//        std::cout << "Max norm: " << err[2] << std::endl;
+//        output1<< err[0] ;
+//        output2<< err[1] ;
+//        output3<< err[2] ;
+
         output1 << "\n";
         output2 << "\n";
         output3 << "\n";
@@ -112,5 +183,8 @@ void HW2_1(double xmin, double xmax, double ymin, double ymax, double tf){
     output1.close();
     output2.close();
     output3.close();
+
+//  if uncomment check_dx() function, we can use check_dx.csv to analyze the convergence behavior for dx
+//    check_dx();
 
 }
