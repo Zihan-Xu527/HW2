@@ -44,38 +44,38 @@ void HW2_2(double xmin, double xmax, double ymin, double ymax, double tf){
     std::vector<double> sol= ini_soln;
     double d_tau = .5 * dx;
     double t = 0.;
-//    int max_iter = 1000;
     int num_iter = 0;
 
     std::vector<double> diff;
     diff.assign(N*N, 0.);
-    std::vector<double> err= err_norm(true_soln, ini_soln, 0.2, diff);
-    double linf_err = err[2];
+    std::vector<double> err= err_norm(true_soln, ini_soln, diff);
 
 
-    while( t < tf &&  linf_err > 0.032){
+    while( t < tf ){
 
         char data_name[250];
         if (num_iter % 100 == 0){
             sprintf(data_name,"num_iter=%d", num_iter);
             newGrid.print_VTK_format(sol, data_name,"../q2reinit.vtk");
-            std::cout<<"max norm of iteration "<<num_iter<<": "<<linf_err<<std::endl;
+
+            std::cout<<"max norm of iteration "<<num_iter<<": "<<err[2]<<std::endl;
+            std::cout<<"l2 norm of iteration "<<num_iter<<": "<<err[1]<<std::endl;
         }
         d_tau = std::min(d_tau, tf-t);
         SL.godunov(d_tau);
         sol = SL.get_sol();
-        err = err_norm(true_soln, sol, 0.1, diff);
-        linf_err = err[2];
+        err = err_norm(true_soln, sol, diff);
+
         num_iter += 1;
 
         t += d_tau;
     }
     std::vector<double> final_soln = SL.get_sol();
-    err = err_norm(true_soln, sol, 0.1, diff);
-    linf_err = err[2];
+    err = err_norm(true_soln, sol, diff);
     std::cout <<"number of iterations: "<< num_iter << std::endl;
-    std::cout <<"final err: "<< linf_err << std::endl;
+    std::cout <<"final l2 norm of error: "<< err[1] << std::endl;
+    std::cout <<"final infinity norm of error: "<< err[2]<< std::endl;
     std::cout <<"final time: "<< t << std::endl;
     newGrid.print_VTK_format(final_soln, "final_soln","../q2reinit.vtk");
-    newGrid.print_VTK_format(diff, "err","../q2reinit.vtk");
+
 }

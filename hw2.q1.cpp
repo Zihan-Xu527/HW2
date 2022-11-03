@@ -82,7 +82,7 @@ void HW2_1(double xmin, double xmax, double ymin, double ymax, double tf){
             numer_soln = SL.get_sol();
             std::vector<double> diff;
             diff.assign(ini_soln.size(), 0.);
-            std::vector<double> err = err_norm(ini_soln, numer_soln, 0.1, diff);
+            std::vector<double> err = err_norm(ini_soln, numer_soln, diff);
             std::cout << "L1 norm: " << err[0] << std::endl;
             std::cout << "L2 norm: " << err[1] << std::endl;
             std::cout << "Max norm: " << err[2] << std::endl;

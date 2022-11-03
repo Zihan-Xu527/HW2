@@ -21,5 +21,5 @@ double bwd_dy(Grid2d & grid, std::vector<double> & func, int n);
 double fwd_dy(Grid2d & grid, std::vector<double> & func, int n);
 
 double ini_cond(double x, double y);
-std::vector<double> err_norm(std::vector<double> x, std::vector<double> y, double eps, std::vector<double> & diff);
+std::vector<double> err_norm(std::vector<double> x, std::vector<double> y, std::vector<double> & diff);
 #endif //HW2_MATH_TOOLS_H

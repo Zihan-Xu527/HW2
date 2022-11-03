@@ -20,11 +20,11 @@ int main() {
     double ymax = 1.;
     double tf = 2*M_PI;
 
-    std::cout << "SOLUTION OF QUESTION 1: "<< std::endl;
-    HW2_1(xmin, xmax, ymin, ymax, tf);
-    std::cout << "SOLUTION OF QUESTION 2: "<< std::endl;
+//    std::cout << "-------------------- SOLUTION OF QUESTION 1 --------------------"<< std::endl;
+//    HW2_1(xmin, xmax, ymin, ymax, tf);
+    std::cout << "-------------------- SOLUTION OF QUESTION 2 --------------------"<< std::endl;
     HW2_2(xmin, xmax, ymin, ymax, tf);
-    std::cout << "SOLUTION OF QUESTION 3: "<< std::endl;
+    std::cout << "-------------------- SOLUTION OF QUESTION 3 --------------------"<< std::endl;
     HW2_3(xmin, xmax, ymin, ymax, tf);
 
 

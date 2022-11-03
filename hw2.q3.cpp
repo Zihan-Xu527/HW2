@@ -60,13 +60,17 @@ void HW2_3(double xmin, double xmax, double ymin, double ymax, double tf){
     char data_name[250];
     sprintf(data_name,"final_soln");
     newGrid.print_VTK_format(sol, data_name,file_name);
-    for (int n = 0; n < N * N; n++)
-    {
-        level_set[n] = signum(sol[n]);
+    std::vector<double> diff;
+    diff.resize(sol.size());
+    std::vector<double> err = err_norm(ini_soln, sol,diff);
+    newGrid.print_VTK_format(diff, "final_err", file_name);
+//    for (int n = 0; n < N * N; n++)
+//    {
+//        level_set[n] = signum(sol[n]);
+//
+//    }
 
-    }
-
-    newGrid.print_VTK_format(level_set, "final_level_set",file_name);
+//    newGrid.print_VTK_format(level_set, "final_level_set",file_name);
 
 
 
