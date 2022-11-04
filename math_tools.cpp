@@ -232,9 +232,7 @@ std::vector<double> err_norm(std::vector<double> x, std::vector<double> y, std::
         diff[i] = x[i] - y[i];
         err[0] += std::abs(diff[i]); //l1 norm
         err[1] += pow(diff[i], 2);
-        max = diff[i] > max ? diff[i] : max; //max norm
-
-
+        max = std::abs(diff[i]) > max ? std::abs(diff[i]) : max; //max norm
     }
     err[1] = std::sqrt(err[1]); //l2 norm
     err[2] = max;
