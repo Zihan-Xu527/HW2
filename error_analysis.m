@@ -35,12 +35,12 @@ dt_critical = [(b(1)/(2*b(2))*dx(1)^2)^(1/3);
            
 %% PART II: check the convergence rate for dt:
 
-% dx = M(2:5,1);
-% dt = dx.*dx;
-% err = M(2:5,6);
-% figure()
-% error_loglog(dt, err)
-% error_table(dt, err)
+dx = M(2:5,1);
+dt = dx.*dx;
+err = M(2:5,6);
+figure()
+error_loglog(dt, err)
+error_table(dt, err)
  
 
 %% PART III: check the convergence rate for dx:
