@@ -19,7 +19,7 @@ void check_dx(){
     std::ofstream output4;
     std::string fileName4 = "../check_dx.csv";
     output4.open(fileName4);
-    // dx/dt ratios: 0.5, 1, 2, 4
+
     // dx : 1/64, 1/32, 1/16, 1/8
     // N : 129, 65, 33, 17
     int NN[4] = {17, 33, 65, 129};
@@ -39,8 +39,7 @@ void check_dx(){
         }
         SL_method SL(newGrid, ini_soln);
         double t = 0.;
-        std::vector<double> numer_soln;
-        numer_soln.assign(ini_soln.size(), 0.);
+        std::vector<double> numer_soln = ini_soln;
         while(t < tf){
             dt = std::min(dt, tf-t);
             SL.advection_solver(dt);
@@ -62,10 +61,10 @@ void check_dx(){
 
 void HW2_1(double xmin, double xmax, double ymin, double ymax, double tf){
 
-    int NN[4] = {17, 33, 65, 129};
-//    int NN[4] = {9,17, 33, 65};
+    int NN[4] = {17, 33, 65, 129};      //original analysis
+//    int NN[4] = {9,17, 33, 65};         // for checking dt = dx^2
     double ratios[4] = {0.5, 1., 5., 10.}; // dx/dt ratios: 0.5, 1, 5, 10
-    //output
+    // output errors
     std::ofstream output1;
     std::string fileName1 = "../l1_errors.csv";
     output1.open(fileName1);
@@ -184,7 +183,7 @@ void HW2_1(double xmin, double xmax, double ymin, double ymax, double tf){
     output2.close();
     output3.close();
 
-//  if uncomment check_dx() function, we can use check_dx.csv to analyze the convergence behavior for dx
+//  we can use check_dx.csv to analyze the convergence behavior for dx
     check_dx();
 
 }

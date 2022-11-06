@@ -52,6 +52,7 @@ std::vector<double> SL_method::trajectory_interpolation(std::vector<double> &fun
 
 void SL_method::advection_solver(double dt)
 {
+//#pragma omp parallel for
     for (int n = 0 ; n < ( sl_grid.get_N() * sl_grid.get_M() ) ; n++) {
         std::vector<double> depart_coord = trajectory_interpolation( ini_sol, n, dt );
         sol[n] = ENO_interpolation(sl_grid, ini_sol, depart_coord[0], depart_coord[1]);
@@ -60,7 +61,8 @@ void SL_method::advection_solver(double dt)
 
 void SL_method::godunov(double dt){
     std::vector<double> func = sol;
-    for (int n=0; n < (sl_grid.get_N()*sl_grid.get_M()) ; n++) {
+//#pragma omp parallel for
+    for (int n=0; n < ( sl_grid.get_N() * sl_grid.get_M() ) ; n++) {
         double phi_x = 0.; // default condition c
         // condition a:
         if ( signum(ini_sol[n])* bwd_dx(sl_grid, func, n) <= 0. && signum(ini_sol[n])* fwd_dx(sl_grid, func, n) <= 0. )

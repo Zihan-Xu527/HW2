@@ -227,7 +227,7 @@ std::vector<double> err_norm(std::vector<double> x, std::vector<double> y, std::
     std::vector<double> err;
     err.resize(3); // reserve l1, l2, and max norm respectively
     double max = 0.;
-//#pragma omp parallel for
+#pragma omp parallel for
     for (int i = 0; i < x.size(); i++){
         diff[i] = x[i] - y[i];
         err[0] += std::abs(diff[i]); //l1 norm
